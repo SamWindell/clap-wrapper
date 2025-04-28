@@ -155,6 +155,10 @@ tresult PLUGIN_API ClapAsVst3::terminate()
 
 tresult PLUGIN_API ClapAsVst3::setActive(TBool state)
 {
+  // Bitwig and Cakewalk have been known to call this from a different thread ID. I think we have to assume that
+  // they are doing that logically consistent with other main thread calls.
+  auto mainthread = _plugin->AlwaysMainThread();
+
   if (state)
   {
     if (_active) return kResultFalse;
@@ -229,6 +233,10 @@ tresult PLUGIN_API ClapAsVst3::setState(IBStream* state)
 
 tresult PLUGIN_API ClapAsVst3::getState(IBStream* state)
 {
+  // ACID Pro has been known to call this from a different thread ID. I think we have to assume that they are
+  // doing that logically consistent with other main thread calls.
+  auto mainthread = _plugin->AlwaysMainThread();
+
   return (_plugin->save(CLAPVST3StreamAdapter(state)) ? Steinberg::kResultOk : Steinberg::kResultFalse);
 }
 
