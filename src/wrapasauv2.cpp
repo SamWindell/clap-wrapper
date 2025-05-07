@@ -144,11 +144,6 @@ WrapAsAUV2::~WrapAsAUV2()
 {
   if (_plugin)
   {
-    // Logic Pro 11.0.1 has been known to destroy a plugin from a different thread (but presumably
-    // a thread logically consistent to the plugin as the 'main thread'). We need to ensure that the
-    // CLAP can thread-check us and get the correct result.
-    auto guarantee_mainthread = _plugin->AlwaysMainThread();
-
     _os_attached.off();
     _plugin->terminate();
     _plugin.reset();
@@ -1204,7 +1199,7 @@ OSStatus WrapAsAUV2::RestoreState(CFPropertyListRef plist)
   const void* pData = CFDictionaryGetValue(tDict, CFSTR(kAUPresetDataKey));
   if (!pData || CFGetTypeID(CFTypeRef(pData)) != CFDataGetTypeID()) return -1;
 
-  /*
+    /*
    * In the read side I fall through to default, whereas in the write
    * side I use an 'else' on the set of stream formats. This means
    * you at least try in case saved with an older wrapper version
