@@ -455,16 +455,16 @@ OSStatus WrapAsAUV2::GetParameterInfo(AudioUnitScope inScope, AudioUnitParameter
       // checking if the parameter supports the conversion of its value to text
 
       // we can't get the value since we are not in the audio thread
-      auto guarantee_mainthread = _plugin->AlwaysMainThread();
-      double value;
-      if (_plugin->_ext._params->get_value(_plugin->_plugin, info.id, &value))
-      {
-        char buf[200];
-        if (_plugin->_ext._params->value_to_text(_plugin->_plugin, info.id, value, buf, sizeof(buf)))
-        {
-          flags |= kAudioUnitParameterFlag_HasName;
-        }
-      }
+      // auto guarantee_mainthread = _plugin->AlwaysMainThread();
+      // double value;
+      // if (_plugin->_ext._params->get_value(_plugin->_plugin, info.id, &value))
+      // {
+      //   char buf[200];
+      //   if (_plugin->_ext._params->value_to_text(_plugin->_plugin, info.id, value, buf, sizeof(buf)))
+      //   {
+      flags |= kAudioUnitParameterFlag_HasName;
+      //   }
+      // }
 
       /*
        * The CFString() used from the param can reset which releases it. So add a ref count
@@ -1199,7 +1199,7 @@ OSStatus WrapAsAUV2::RestoreState(CFPropertyListRef plist)
   const void* pData = CFDictionaryGetValue(tDict, CFSTR(kAUPresetDataKey));
   if (!pData || CFGetTypeID(CFTypeRef(pData)) != CFDataGetTypeID()) return -1;
 
-    /*
+  /*
    * In the read side I fall through to default, whereas in the write
    * side I use an 'else' on the set of stream formats. This means
    * you at least try in case saved with an older wrapper version
