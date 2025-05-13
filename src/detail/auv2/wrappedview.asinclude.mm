@@ -150,15 +150,20 @@ void CLAP_WRAPPER_TIMER_CALLBACK(CFRunLoopTimerRef timer, void *info)
   {
     CFRunLoopTimerInvalidate(idleTimer);
   }
-  auto gui = ui._plugin->_ext._gui;
-  gui->destroy(ui._plugin->_plugin);
+  if (ui._plugin)
+  {
+    auto gui = ui._plugin->_ext._gui;
+    if (gui) gui->destroy(ui._plugin->_plugin);
+  }
 
   [super dealloc];
 }
 - (void)setFrame:(NSRect)newSize
 {
   [super setFrame:newSize];
+  if (ui._plugin == nullptr) return;
   auto gui = ui._plugin->_ext._gui;
+  if (gui == nullptr) return;
   gui->set_scale(ui._plugin->_plugin, 1.0);
   gui->set_size(ui._plugin->_plugin, newSize.size.width, newSize.size.height);
 
