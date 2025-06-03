@@ -220,6 +220,8 @@ void Plugin::connectClap(const clap_plugin_t* clap)
     getExtension(_plugin, _ext._contextmenu, CLAP_EXT_CONTEXT_MENU_COMPAT);
   }
 
+  getExtension(_plugin, _ext._gainreduc, CLAP_EXT_GAIN_ADJUSTMENT_METERING);
+
 #if LIN
   getExtension(_plugin, _ext._posixfd, CLAP_EXT_POSIX_FD_SUPPORT);
 #endif
@@ -350,6 +352,7 @@ void Plugin::reset()
 //  _plugin->process(_plugin, data);
 //}
 
+/*
 const clap_plugin_gui_t* Plugin::getUI() const
 {
   if (_ext._gui)
@@ -361,6 +364,7 @@ const clap_plugin_gui_t* Plugin::getUI() const
   }
   return nullptr;
 }
+*/
 
 void Plugin::mark_dirty()
 {
