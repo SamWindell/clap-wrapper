@@ -1138,7 +1138,7 @@ void ClapAsVst3::param_rescan(clap_param_rescan_flags flags)
     }
   }
 
-  this->componentHandler->restartComponent(vstflags);
+  if (this->componentHandler) this->componentHandler->restartComponent(vstflags);
 }
 
 void ClapAsVst3::param_clear(clap_id param, clap_param_clear_flags flags)
