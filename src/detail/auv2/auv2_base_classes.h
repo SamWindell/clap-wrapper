@@ -20,6 +20,9 @@
 #include <iostream>
 #include <memory>
 #include <map>
+#include <mutex>
+#include <optional>
+#include <string>
 
 #include "process.h"
 #include "parameter.h"
@@ -91,33 +94,37 @@ class Clumps
  public:
   void reset();
   UInt32 addClump(const char *fullpath);
-  const char *getClump(UInt32 id);
+  std::optional<std::string> getClump(UInt32 id);
 
  private:
+  std::mutex _mutex;
   UInt32 _lastclump = 0;
   std::map<std::string, UInt32> _clumps;
 };
 
 void Clumps::reset()
 {
+  const std::lock_guard<std::mutex> lock(_mutex);
   _clumps.clear();
   _lastclump = 0;
 }
 
-const char *Clumps::getClump(UInt32 id)
+std::optional<std::string> Clumps::getClump(UInt32 id)
 {
+  const std::lock_guard<std::mutex> lock(_mutex);
   for (const auto &c : _clumps)
   {
     if (c.second == id)
     {
-      return c.first.c_str();
+      return c.first;
     }
   }
-  return nullptr;
+  return std::nullopt;
 }
 
 UInt32 Clumps::addClump(const char *fullpath)
 {
+  const std::lock_guard<std::mutex> lock(_mutex);
   auto r = _clumps.find(fullpath);
   if (r == _clumps.end())
   {

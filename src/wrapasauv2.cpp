@@ -570,8 +570,9 @@ OSStatus WrapAsAUV2::CopyClumpName(AudioUnitScope inScope, UInt32 inClumpID, UIn
     auto p = _clumps.getClump(inClumpID);
     if (p)
     {
-      auto const len = std::min(strlen(p), (size_t)inDesiredNameLength);
-      *outClumpName = CFStringCreateWithBytes(NULL, (const UInt8 *)p, len, kCFStringEncodingUTF8, false);
+      auto const len = std::min(p->size(), (size_t)inDesiredNameLength);
+      *outClumpName = CFStringCreateWithBytes(NULL, (const UInt8 *)p->data(), len,
+                                              kCFStringEncodingUTF8, false);
       return noErr;
     }
   }
